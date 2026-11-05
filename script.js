@@ -1,16 +1,33 @@
-const input = document.getElementById("taskInput");
-const button = document.querySelector("button");
-const list = document.querySelector("ul");
+// Zistenie názvu stránky
+const page = window.location.pathname.split("/").pop();
 
+// Nastavenie storage kľúča podľa stránky
+let storageKey = "tasks_daily";
+
+if (page === "weekly.html") storageKey = "tasks_weekly";
+if (page === "monthly.html") storageKey = "tasks_monthly";
+
+// Výber správneho UL podľa stránky
+let list;
+
+if (page === "index.html") list = document.getElementById("dailyList");
+if (page === "weekly.html") list = document.getElementById("weeklyList");
+if (page === "monthly.html") list = document.getElementById("monthlyList");
+
+// Input + button
+const input = document.getElementById("taskInput");
+const button = document.querySelector(".btn1");
+
+// Progress bar
 const progressText = document.getElementById("progressText");
 const progressFill = document.getElementById("progressFill");
 
 // Načítanie uložených úloh
-let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+let tasks = JSON.parse(localStorage.getItem(storageKey)) || [];
 
 // Uloženie úloh
 function saveTasks() {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
+    localStorage.setItem(storageKey, JSON.stringify(tasks));
 }
 
 // Progress Bar
@@ -42,7 +59,7 @@ function renderTasks() {
 
         // Dokončenie úlohy
         const completeButton = document.createElement("button");
-        completeButton.textContent = "✓";
+        completeButton.textContent = "✅";
 
         completeButton.addEventListener("click", function() {
             tasks[index].completed = !tasks[index].completed;
@@ -52,7 +69,7 @@ function renderTasks() {
 
         // Odstránenie úlohy
         const deleteButton = document.createElement("button");
-        deleteButton.textContent = "✕";
+        deleteButton.textContent = "❌";
 
         deleteButton.addEventListener("click", function() {
             tasks.splice(index, 1);
